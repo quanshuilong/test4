@@ -1,0 +1,1246 @@
+create or replace view v_country as
+select p.COUNTRY_ID as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+p.name as address from gdb_country p;
+
+create or replace view v_province as
+select p.Province_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+p.name as address from gdb_province p ;
+create or replace view v_city as
+select p.city_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  
+   when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+p.name as address from gdb_city p ;
+create or replace view v_county as
+select p.county_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  
+ when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  
+ when(p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||p.name as address from gdb_county p ;
+create or replace view v_district as
+select p.district_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  
+    when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+||
+ (case  when(p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when(p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||p.name as address from gdb_district p ;
+create or replace view v_village as
+select p.VILLAGE_ID as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when(p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when(p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||p.name as address from gdb_village p ;
+create or replace view v_eda as
+select p.Eda_id as id,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when(p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when(p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )||
+p.name as address from gdb_eda p ;
+create or replace view v_mountain as
+select p.mountain_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when(p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when(p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )||
+p.name as address from gdb_moutain p ;
+create or replace view v_river as
+select p.river_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when(p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when(p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+ ||
+p.name as address from gdb_river p ;
+create or replace view v_road as
+select p.road_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when(p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when(p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+(case  
+     when(p.eda_id is null)
+         then ''
+     else
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)
+     end)
+||
+p.name as address from gdb_road p ;
+create or replace view v_road_branch as
+select p.road_branch_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when(p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when(p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+(case 
+     when(p.eda_id is null)
+         then ''
+     else
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)
+     end)
+ ||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+    end)
+||
+p.name as address from gdb_road_branch p ;
+create or replace view v_streetno as
+select p.streetno_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when(p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when(p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+(case 
+     when(p.eda_id is null)
+         then ''
+     else
+         (select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)
+ end)
+ ||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+          (select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+  end)
+ ||
+ (case  when(p.road_branch_id is null)
+      then ''
+  else
+      (select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+  end)
+||p.name as address from gdb_streetno p ;
+create or replace view v_bd as
+select p.bd_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when(p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||p.name as address from gdb_bd p ;
+create or replace view v_streetno_sub as
+select p.streetno_sub_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when( p.province_id is null )
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+(case 
+     when(p.eda_id is null)
+         then ''
+     else
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)
+     end)||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+          (select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+  end)
+ ||
+ (case  when( p.road_branch_id is null)
+      then ''
+  else
+      (select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+  end)
+ ||
+ (case  when( p.streetno_id is null)
+      then ''
+  else
+     (select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)
+   end)
+ ||
+p.name as address from gdb_streetno_sub p ;
+create or replace view v_community as
+select p.community_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when( p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end)
+||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+          (select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+  end)
+ ||
+ (case  when( p.road_branch_id is null)
+      then ''
+  else
+      (select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+  end)
+ ||
+ (case  when( p.streetno_id is null)
+      then ''
+  else
+     (select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)
+   end)
+ ||
+ (case  when( p.streetno_sub_id is null)
+       then ''
+   else
+       (select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)
+  end)
+||
+p.name as address from gdb_community p ;
+create or replace view v_other as
+select p.other_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when( p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+          (select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+  end)
+  ||
+ (case  when( p.road_branch_id is null)
+      then ''
+  else
+      (select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+  end)
+ ||
+ (case  when( p.streetno_id is null)
+      then ''
+  else
+     (select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)
+   end)
+ ||
+ (case  when( p.streetno_sub_id is null)
+       then ''
+   else
+       (select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)
+  end)
+ ||
+ (case  when( p.building_id is null)
+    then ''
+  else
+    (select k.name from gdb_buildings k where p.building_id is not null and k.building_id=p.building_id)
+  end)
+ ||
+p.name as address from gdb_other p ;
+create or replace view v_buildings as
+select p.building_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when( p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+          (select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+  end)
+ ||
+ (case  when( p.road_branch_id is null)
+      then ''
+  else
+      (select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+  end)
+ ||
+ (case  when( select p.building_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when( p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+          (select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+  end)
+ ||
+ (case  when( p.road_branch_id is null)
+      then ''
+  else
+      (select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+  end)
+ ||
+ (case  when( p.streetno_id is null)
+      then ''
+  else
+     (select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)
+   end)
+ ||
+ (case  when( p.streetno_sub_id is null)
+       then ''
+   else
+       (select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)
+  end)
+ ||
+p.name as address from gdb_buildings p ;)
+      then ''
+  else
+     (select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)
+   end)
+ ||
+ (case  when( p.streetno_sub_id is null)
+       then ''
+   else
+       (select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)
+  end)
+ ||
+p.name as address from gdb_buildings p ;
+create or replace view v_buildingsunit as
+select p.buildingsunit_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when( p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+(case 
+     when(p.eda_id is null)
+         then ''
+     else
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)
+     end)
+ ||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+          (select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+  end)
+||
+ (case  when( p.road_branch_id is null)
+      then ''
+  else
+      (select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+  end)
+||
+ (case  when( p.streetno_id is null)
+      then ''
+  else
+     (select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)
+   end)
+ ||
+ (case  when( p.streetno_sub_id is null)
+       then ''
+   else
+       (select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)
+  end)
+ ||
+ (case  when( p.building_id is null)
+    then ''
+  else
+    (select k.name from gdb_buildings k where p.building_id is not null and k.building_id=p.building_id)
+  end)
+ ||
+p.name as address from gdb_buildingsunit p ;
+create or replace view v_buildingsfloor as
+select p.buildingsfloor_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when( p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+(case 
+     when(p.eda_id is null)
+         then ''
+     else
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)
+     end)
+ ||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+          (select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+  end)
+ ||
+ (case  when( p.road_branch_id is null)
+      then ''
+  else
+      (select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+  end)
+ ||
+ (case  when( p.streetno_id is null)
+      then ''
+  else
+     (select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)
+   end)
+ ||
+ (case  when( p.streetno_sub_id is null)
+       then ''
+   else
+       (select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)
+  end)
+ ||
+ (case  when( p.building_id is null)
+    then ''
+  else
+    (select k.name from gdb_buildings k where p.building_id is not null and k.building_id=p.building_id)
+  end)
+ ||
+ (case  when( p.buildingsunit_id is null)
+     then ''
+  else
+     (select l.name from gdb_buildingsunit l where p.buildingsunit_id is not null and l.buildingsunit_id= p.buildingsunit_id)
+  end)
+ ||
+p.name as address from gdb_buildingsfloor;
+create or replace view v_buildingsroom as
+select p.buildingsroom_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when( p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+(case 
+     when(p.eda_id is null)
+         then ''
+     else
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)
+     end)
+ ||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+          (select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+  end)
+ ||
+ (case  when( p.road_branch_id is null)
+      then ''
+  else
+      (select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+  end)
+ ||
+ (case  when( p.streetno_id is null)
+      then ''
+  else
+     (select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)
+   end)
+ ||
+  (case  when( p.streetno_sub_id is null)
+       then ''
+   else
+       (select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)
+  end)
+ ||
+ (case  when( p.building_id is null)
+    then ''
+  else
+    (select k.name from gdb_buildings k where p.building_id is not null and k.building_id=p.building_id)
+  end)
+ ||
+ (case  when( p.buildingsunit_id is null)
+     then ''
+  else
+     (select l.name from gdb_buildingsunit l where p.buildingsunit_id is not null and l.buildingsunit_id= p.buildingsunit_id)
+  end)
+ ||
+ (case  when( p.buildingsfloor_id is null)
+     then ''
+  else
+     (select m.name from gdb_buildingsfloor m where p.buildingsfloor_id is not null and m.buildingsfloor_id =p.buildingsfloor_id)
+  end)
+||
+p.name as address from gdb_buildingsroom p where p.data_status!=2;
+create or replace view v_Factory as
+select p.factory_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when( p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+(case 
+     when(p.eda_id is null)
+         then ''
+     else
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)
+     end)
+||
+p.name as address from gdb_factory p where p.data_status!=2;
+create or replace view v_Landmark as
+select p.landmark_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as poi_type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+row_number()over() as rowno,
+(case  when( p.province_id is null)
+     then ''
+ else
+     (select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)
+ end)
+ ||
+ (case  when( p.city_id is null)
+    then ''
+  else
+    (select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+  end)
+||
+(case  when( p.county_id is null)
+  then ''
+ else
+  (select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+ end)
+||
+(case 
+     when(p.district_id is null)
+           then ''
+     else
+         (select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+      end
+)
+||
+(case 
+   when(p.village_id is null)
+       then ''
+   else
+      (select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+      end
+ )
+||
+(case  when( p.community_id is null)
+    then ''
+ else
+    (select k.name from gdb_community k where p.community_id is not null and k.community_id=p.community_id)
+ end)
+||
+(case 
+     when(p.eda_id is null)
+         then ''
+     else
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)
+     end)||
+  (case
+       when(p.road_id is null)
+          then ''
+       else
+          (select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)
+  end)
+ ||
+ (case  when( p.road_branch_id is null)
+      then ''
+  else
+      (select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+  end)
+ ||
+ (case  when( p.streetno_id is null)
+      then ''
+  else
+     (select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)
+   end)
+ ||
+ (case  when( p.streetno_sub_id is null)
+       then ''
+   else
+       (select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)
+  end)
+ ||
+p.name as address from gdb_landmark p ;
+create or replace view v_poi as
+select p.pcs_POIID as id ,
+p.adcode as adcode,
+p.poi_type as POI_type,
+p.x as x,
+p.y as y,
+p.name as name,
+p.addr as fullname,
+p.addr as address,
+row_number()over() as rowno from MDB_POI p;

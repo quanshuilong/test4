@@ -1,0 +1,655 @@
+create or replace view v_address as
+select p.COUNTRY_ID as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+ROWNUM as rowno,
+p.name as address from gdb_country p
+union
+select p.Province_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+ROWNUM as rowno,
+p.name as address from gdb_province p
+union
+select p.city_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+p.name as address from gdb_city p
+union
+select p.county_id as id,
+p.adcode as adcode,
+p.poi_type as type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||p.name as address from gdb_county p
+union
+select p.district_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||p.name as address from gdb_district p
+union
+select p.VILLAGE_ID as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||p.name as addresse from gdb_village p
+union
+select p.Eda_id as id,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)||
+p.name as address from gdb_eda p
+union
+select p.mountain_id as id,
+p.adcode as adcode,
+p.poi_type as type,
+p.x_coordinate as x,
+p.y_coordinate as y,p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)||
+p.name as address from gdb_moutain p
+union
+select p.river_id as id,
+p.adcode as adcode,
+p.poi_type as type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)||
+p.name as address from gdb_river p
+union
+select p.road_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)||
+p.name as address from gdb_road p
+union
+select p.road_branch_id as id,
+p.adcode as adcode,
+p.poi_type as poi_type,
+p.x_coordinate as x,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)||
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)||
+p.name as address from gdb_road_branch p
+union
+select p.streetno_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+(select count(*) from gdb_road_branch)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)||
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)||
+(select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)
+
+||p.name as address from gdb_streetno p
+union
+select p.bd_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+(select count(*) from gdb_road_branch)+
+(select count(*) from gdb_streetno)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||p.name as address from gdb_bd p
+
+union
+select p.streetno_sub_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+(select count(*) from gdb_road_branch)+
+(select count(*) from gdb_streetno)+
+(select count(*) from gdb_bd)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)||
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)||
+(select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)||
+(select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)||
+p.name as address from gdb_streetno_sub p
+union
+select p.community_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+(select count(*) from gdb_road_branch)+
+(select count(*) from gdb_streetno)+
+(select count(*) from gdb_bd)+
+(select count(*) from gdb_streetno_sub)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)||
+(select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)||
+(select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)||
+(select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)||
+p.name as address from gdb_community p
+union
+select p.landmark_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+(select count(*) from gdb_road_branch)+
+(select count(*) from gdb_streetno)+
+(select count(*) from gdb_bd)+
+(select count(*) from gdb_streetno_sub)+
+(select count(*) from gdb_community)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)||
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)||
+(select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)||
+(select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)||
+(select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)||
+p.name as address from gdb_landmark p
+union
+select p.other_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+(select count(*) from gdb_road_branch)+
+(select count(*) from gdb_streetno)+
+(select count(*) from gdb_bd)+
+(select count(*) from gdb_streetno_sub)+
+(select count(*) from gdb_community)+
+(select count(*) from gdb_landmark)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)||
+(select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)||
+(select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)||
+(select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)||
+(select k.name from gdb_buildings k where p.building_id is not null and k.building_id=p.building_id)||
+p.name as address from gdb_other p
+union
+select p.building_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+(select count(*) from gdb_road_branch)+
+(select count(*) from gdb_streetno)+
+(select count(*) from gdb_bd)+
+(select count(*) from gdb_streetno_sub)+
+(select count(*) from gdb_community)+
+(select count(*) from gdb_landmark)+
+(select count(*) from gdb_other)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)||
+(select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)||
+(select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)||
+(select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)||
+p.name as address from gdb_buildings p
+union
+select p.buildingsunit_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+(select count(*) from gdb_road_branch)+
+(select count(*) from gdb_streetno)+
+(select count(*) from gdb_bd)+
+(select count(*) from gdb_streetno_sub)+
+(select count(*) from gdb_community)+
+(select count(*) from gdb_landmark)+
+(select count(*) from gdb_other)+
+(select count(*) from gdb_buildings)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)||
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)||
+(select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)||
+(select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)||
+(select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)||
+(select k.name from gdb_buildings k where p.building_id is not null and k.building_id=p.building_id)||
+p.name as address from gdb_buildingsunit p
+union
+select p.buildingsfloor_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+(select count(*) from gdb_road_branch)+
+(select count(*) from gdb_streetno)+
+(select count(*) from gdb_bd)+
+(select count(*) from gdb_streetno_sub)+
+(select count(*) from gdb_community)+
+(select count(*) from gdb_landmark)+
+(select count(*) from gdb_other)+
+(select count(*) from gdb_buildings)+
+(select count(*) from gdb_buildingsunit)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)||
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)||
+(select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)||
+(select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)||
+(select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)||
+(select k.name from gdb_buildings k where p.building_id is not null and k.building_id=p.building_id)||
+(select l.name from gdb_buildingsunit l where p.buildingsunit_id is not null and l.buildingsunit_id= p.buildingsunit_id)||
+p.name as address from gdb_buildingsfloor p
+union
+select p.buildingsroom_id as id
+,
+p.adcode as adcode
+,
+p.poi_type as type
+,
+p.x_coordinate as x
+,
+p.y_coordinate as y,
+p.name as name,
+p.full_name as fullname,
+(select count(*) from gdb_country)+
+(select count(*) from gdb_province)+
+(select count(*) from gdb_city)+
+(select count(*) from gdb_county)+
+(select count(*) from gdb_district)+
+(select count(*) from gdb_village)+
+(select count(*) from gdb_eda)+
+(select count(*) from gdb_moutain)+
+(select count(*) from gdb_river)+
+(select count(*) from gdb_road)+
+(select count(*) from gdb_road_branch)+
+(select count(*) from gdb_streetno)+
+(select count(*) from gdb_bd)+
+(select count(*) from gdb_streetno_sub)+
+(select count(*) from gdb_community)+
+(select count(*) from gdb_landmark)+
+(select count(*) from gdb_other)+
+(select count(*) from gdb_buildings)+
+(select count(*) from gdb_buildingsunit)+
+(select count(*) from gdb_buildingsfloor)+
+ROWNUM as rowno,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id=p.province_id)||
+(select b.name from gdb_city b where p.city_id is not null and b.city_id=p.city_id)
+||
+(select c.name from gdb_county c where p.county_id is not null and c.county_id=p.county_id)
+||
+(select d.name from gdb_district d where p.district_id is not null and d.district_id=p.district_id)
+||
+(select e.name from gdb_village e where p.village_id is not null and e.village_id=p.village_id)
+||
+(select f.name from gdb_eda f where f.eda_id is not null and f.eda_id =p.eda_id)||
+(select g.name from gdb_road g where p.road_id is not null and g.road_id=p.road_id)||
+(select h.name from gdb_road_branch h where h.road_branch_id is not null and h.road_branch_id=p.road_branch_id)||
+(select i.name from gdb_streetno i where p.streetno_id is not null and i.streetno_id=p.streetno_id)||
+(select j.name from gdb_streetno_sub j where p.streetno_sub_id is not null and j.streetno_sub_id=p.streetno_sub_id)||
+(select k.name from gdb_buildings k where p.building_id is not null and k.building_id=p.building_id)||
+(select l.name from gdb_buildingsunit l where p.buildingsunit_id is not null and l.buildingsunit_id=p.buildingsunit_id)||
+(select m.name from gdb_buildingsfloor m where p.buildingsfloor_id is not null and m.buildingsfloor_id =p.buildingsfloor_id)||
+p.name as address from gdb_buildingsroom p;

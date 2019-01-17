@@ -1,0 +1,387 @@
+create or replace view v_d_province as
+select 'gdb_province' as tablename
+,p.province_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|||||||||||||||' as GIDS
+,P.Isvalid
+from GDB_PROVINCE p;
+
+create or replace view v_d_city as
+select 'gdb_city' as tablename
+,p.city_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '||||||||||||||' as GIDS
+,P.Isvalid
+from GDB_CITY p;
+
+create or replace view v_d_county as
+select 'gdb_county' as tablename
+,p.county_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '|||||||||||||' as GIDS
+,P.Isvalid
+from GDB_COUNTY p;
+
+create or replace view v_d_eda as
+select 'gdb_eda' as tablename
+,p.eda_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '|' || p.eda_id|| '|' ||
+p.district_id || '|' || p.village_id || '||||||||||' as GIDS
+,P.Isvalid
+from gdb_eda p;
+
+create or replace view v_d_district as
+select 'gdb_district' as tablename
+,p.district_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '||' || p.district_id ||
+'|||||||||||' as GIDS
+,P.Isvalid
+from gdb_district p;
+
+create or replace view v_d_village as
+select 'gdb_village' as tablename
+,p.village_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '|' || p.district_id || '|'
+|| p.village_id || '|||||||||||' as GIDS
+,P.Isvalid
+from gdb_village p;
+
+create or replace view v_d_road as
+select 'gdb_road' as tablename
+,p.road_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '|' || p.eda_id || '|' ||
+p.district_id || '|' || p.village_id || '||' || p.road_id || '||||||||' as GIDS
+,P.Isvalid
+from gdb_road p;
+
+create or replace view v_d_road_branch as
+select 'gdb_road_branch' as tablename
+,p.road_branch_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '|' || p.eda_id || '|' ||
+p.district_id || '|' || p.village_id || '||' || p.road_id || '|' || p.road_branch_id ||
+'|||||||' as GIDS
+,P.Isvalid
+from gdb_road_branch p;
+
+create or replace view v_d_streetno as
+select 'gdb_streetno' as tablename
+,p.streetno_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '|' || p.eda_id || '|' ||
+p.district_id || '|' || p.village_id || '||' || p.road_id || '|' || p.road_branch_id ||
+'|' || p.streetno_id || '||||||' as GIDS
+,P.Isvalid
+from gdb_streetno p;
+
+create or replace view v_d_streetno_sub as
+select 'gdb_streetno_sub' as tablename
+,p.streetno_sub_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '|' || p.eda_id || '|' ||
+p.district_id || '|' || p.village_id || '||' || p.road_id || '|' || p.road_branch_id ||
+'|' || p.streetno_id || '|' || p.streetno_sub_id || '|||||' as GIDS
+,P.Isvalid
+from gdb_streetno_sub p;
+
+create or replace view v_d_community as
+select 'gdb_community' as tablename
+,p.community_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '||' || p.district_id ||
+'|' || p.village_id || '||' || p.road_id || '|' || p.road_branch_id || '|' || p.streetno_id
+|| '|' || p.streetno_sub_id || '|' || p.community_id || '||||' as GIDS
+,P.Isvalid
+from gdb_community p;
+
+create or replace view v_d_landmark as
+select 'gdb_landmark' as tablename
+,p.landmark_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '|' || p.eda_id || '|' ||
+p.district_id || '|' || p.village_id || '||' || p.road_id || '|' || p.road_branch_id ||
+'|' || p.streetno_id || '|' || p.streetno_sub_id || '|' || p.community_id || '|' || p.landmark_id
+|| '|||' as GIDS
+,P.Isvalid
+from gdb_landmark p;
+
+create or replace view v_d_buildings as
+select 'gdb_buildings' as tablename
+,p.building_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '||' || p.district_id ||
+'|' || p.village_id || '||' || p.road_id || '|' || p.road_branch_id || '|' || p.streetno_id
+|| '|' || p.streetno_sub_id || '|' || p.community_id || '|' || p.landmark_id || '|' ||
+p.building_id || '||' as GIDS
+,P.Isvalid
+from gdb_buildings p;
+
+create or replace view v_d_buildingsunit as
+select 'gdb_buildingsunit' as tablename
+,p.buildingsunit_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '||' || p.district_id ||
+'|' || p.village_id || '||' || p.road_id || '|' || p.road_branch_id || '|' || p.streetno_id
+|| '|' || p.streetno_sub_id || '|' || p.community_id || '|' || p.landmark_id || '|' ||
+p.building_id || '|' || p.buildingsunit_id || '|' as GIDS
+,P.Isvalid
+from gdb_buildingsunit p;
+
+create or replace view v_d_buildingsroom as
+select 'gdb_buildingsroom' as tablename
+,p.buildingsroom_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '||' || p.district_id ||
+'|' || p.village_id || '||' || p.road_id || '|' || p.road_branch_id || '|' || p.streetno_id
+|| '|' || p.streetno_sub_id || '|' || p.community_id || '|' || p.landmark_id || '|' ||
+p.building_id || '|' || p.buildingsunit_id || '|' || p.buildingsroom_id as GIDS
+,P.Isvalid
+from gdb_buildingsroom p;
+
+create or replace view v_d_moutain as
+select 'gdb_moutain' as tablename
+,p.mountain_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '||' || p.district_id ||
+'|' || p.village_id || '||||||||||' as GIDS
+,P.Isvalid
+from gdb_moutain p;
+
+create or replace view v_d_river as
+select 'gdb_river' as tablename
+,p.river_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '|||||||||||||' as GIDS
+,P.Isvalid
+from gdb_river p;
+
+create or replace view v_d_other as
+select 'gdb_other' as tablename
+,p.other_id as GID
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,p.coordinate_precision
+,p.sn
+,p.data_status
+,p.poiid
+,p.oid_address_id
+,p.cp
+,p.add_time
+,p.lastupdate
+,p.province_id || '|' || p.city_id || '|' || p.county_id || '||' || p.district_id ||
+'|' || p.village_id || '||' || p.road_id || '|' || p.road_branch_id || '|' || p.streetno_id
+|| '|' || p.streetno_sub_id || '|' || p.community_id || '|' || p.landmark_id || '|' ||
+p.building_id || '||' as GIDS
+,P.Isvalid
+from gdb_other p;

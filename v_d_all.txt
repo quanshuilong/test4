@@ -1,0 +1,191 @@
+CREATE INDEX province_id_index ON gdb_province (province_id);
+CREATE INDEX city_id_index ON gdb_city (city_id);
+CREATE INDEX county_id_index ON gdb_county (county_id);
+CREATE INDEX eda_id_index ON gdb_eda (eda_id);
+CREATE INDEX district_id_index ON gdb_district (district_id);
+CREATE INDEX village_id_index ON gdb_village (village_id);
+CREATE INDEX road_id_index ON gdb_road (road_id);
+CREATE INDEX road_branch_id_index ON gdb_road_branch (road_branch_id);
+CREATE INDEX streetno_id_index ON gdb_streetno (streetno_id);
+CREATE INDEX streetno_sub_id_index ON gdb_streetno_sub (streetno_sub_id);
+CREATE INDEX community_id_index ON gdb_community (community_id);
+CREATE INDEX landmark_id_index ON gdb_landmark (landmark_id);
+CREATE INDEX building_id_index ON gdb_buildings (building_id);
+
+CREATE INDEX pcs_poiid_index ON mdb_poi (pcs_poiid);
+
+create or replace view v_addr_streetno as 
+select p.streetno_id
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id = p.province_id) 
+|| 
+(select b.name from gdb_city b where p.city_id is not null and b.city_id = p.city_id) 
+|| 
+(select c.name from gdb_county c where p.county_id is not null and c.county_id = p.county_id)
+|| 
+(case 
+	when (p.eda_id is null) 
+		then ''
+	else 
+		(select d.name from gdb_eda d where d.eda_id = p.eda_id limit 1)
+	end 
+)
+|| 
+(case 
+	when (p.district_id is null) 
+		then ''
+	else 
+		(select e.name from gdb_district e where e.district_id = p.district_id limit 1)
+	end
+)
+as prefix_addr
+from gdb_streetno p;
+
+create or replace view v_addr_streetno_sub as 
+select p.streetno_sub_id
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id = p.province_id) 
+|| 
+(select b.name from gdb_city b where p.city_id is not null and b.city_id = p.city_id) 
+|| 
+(select c.name from gdb_county c where p.county_id is not null and c.county_id = p.county_id)
+|| 
+(case 
+	when (p.eda_id is null) 
+		then ''
+	else 
+		(select d.name from gdb_eda d where d.eda_id = p.eda_id limit 1)
+	end 
+)
+|| 
+(case 
+	when (p.district_id is null) 
+		then ''
+	else 
+		(select e.name from gdb_district e where e.district_id = p.district_id limit 1)
+	end
+)
+|| 
+(case 
+	when (p.village_id is null)
+		then ''
+	else
+		(select f.name from gdb_village f where f.village_id = p.village_id limit 1)
+	end
+)
+|| 
+(case
+	when (p.road_id is null)
+		then ''
+	else
+		(select g.name from gdb_road g where g.road_id = p.road_id limit 1)
+	end
+)
+|| 
+(case
+	when (p.road_branch_id is null)
+		then ''
+	else
+		(select h.name from gdb_road_branch h where h.road_branch_id = p.road_branch_id limit 1)
+	end
+)
+|| 
+(case
+	when (p.streetno_id is null)
+		then ''
+	else
+		(select i.name from gdb_streetno i where i.streetno_id = p.streetno_id limit 1)
+	end
+)
+as prefix_addr
+from gdb_streetno_sub p;
+
+create or replace view v_addr_buildings as 
+select p.building_id
+,p.adcode
+,p.full_name
+,p.name
+,p.x_coordinate
+,p.y_coordinate
+,
+(select a.name from gdb_province a where p.province_id is not null and a.province_id = p.province_id) 
+|| 
+(select b.name from gdb_city b where p.city_id is not null and b.city_id = p.city_id) 
+|| 
+(select c.name from gdb_county c where p.county_id is not null and c.county_id = p.county_id)
+|| 
+(case 
+	when (p.district_id is null) 
+		then ''
+	else 
+		(select e.name from gdb_district e where e.district_id = p.district_id limit 1)
+	end
+)
+|| 
+(case 
+	when (p.village_id is null)
+		then ''
+	else
+		(select f.name from gdb_village f where f.village_id = p.village_id limit 1)
+	end
+)
+|| 
+(case
+	when (p.road_id is null)
+		then ''
+	else
+		(select g.name from gdb_road g where g.road_id = p.road_id limit 1)
+	end
+)
+|| 
+(case
+	when (p.road_branch_id is null)
+		then ''
+	else
+		(select h.name from gdb_road_branch h where h.road_branch_id = p.road_branch_id limit 1)
+	end
+)
+|| 
+(case
+	when (p.streetno_id is null)
+		then ''
+	else
+		(select i.name from gdb_streetno i where i.streetno_id = p.streetno_id limit 1)
+	end
+)
+|| 
+(case
+	when (p.streetno_sub_id is null)
+		then ''
+	else
+		(select j.name from gdb_streetno_sub j where j.streetno_sub_id = p.streetno_sub_id limit 1)
+	end
+)
+|| 
+(case 
+	when (p.community_id is null)
+		then ''
+	else
+		(select k.name from gdb_community k where k.community_id = p.community_id limit 1)
+	end
+)
+|| 
+(case
+	when (p.landmark_id is null)
+		then ''
+	else
+		(select l.name from gdb_landmark l where l.landmark_id = p.landmark_id limit 1)
+	end
+)
+as prefix_addr
+from gdb_buildings p;
